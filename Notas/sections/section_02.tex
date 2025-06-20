@@ -1,0 +1,345 @@
+\section{Ecuaciones estocásticas en dimensión infinita}
+
+\subsection{Preliminares}
+
+Durante esta sección consideramos un espacio de probabilidad $(\Omega, \mathcal{F}, \mathbb{P})$.
+
+\begin{defn}[Movimiento Browniano]
+  Un proceso $W:=\left(W_t\right)_{t \in[0, \infty)}:[0, \infty) \times \Omega \rightarrow \mathbb{R}$ se denomina Movimiento Browniano si:
+  \begin{enumerate}
+    \item $W_0=0$,
+    \item $W_t$ tiene trayectorias continuas,
+    \item \textbf{(Incrementos estacionarios)} Para $0 \leq s < t$, $W_t - W_s \sim \mathcal{N}(0, t-s)$.
+    \item \textbf{(Incrementos independientes)} Para $0 = t_0 < t_1 < \cdots < t_n $, $\big\{ W_{t_{i+1}} - W_{t_i} \big\}_{i=0}^{n-1}$ son variables aleatorias independientes.
+  \end{enumerate}
+\end{defn}
+
+\begin{obs}[]
+  Un Movimiento Browniano $W$ se puede interpretar como una variable aleatoria:
+  \[
+    X: \Omega \rightarrow \mathcal{C}([0 ,\infty))
+  \]
+  con $X: \mathcal{F}-\mathcal{B}(\mathcal{C}([0, \infty)))$ medible donde $\mathcal{C}([0, \infty))$ está dotado de la topología de la convergencia uniforme en compactos.
+\end{obs}
+
+\begin{teo}[Existencia y unicidad del Movimiento Browniano]
+  Existe una única medida de probabilidad $\mathbb{W}$ en $(\mathcal{C}([0, T]), \mathcal{B}(\mathcal{C}([0, T])))$ que genera un moviento Browniano. Es decir:
+  \[
+    \mathbb{W}\left( A \right) = \mathbb{P}\left( W \in A \right)
+  \]
+  con $W$ un Movimiento Browniano.
+\end{teo}
+
+\begin{defn}[Movimiento Browniano en $\mathbb{R}^d$]
+  Si $W^1, W^2, \ldots, W^d$ son $d$ movimientos Browniano independientes a $W = (W^1, W^2, \ldots, W^d)$ lo llamamos movimiento Browniano $d$-dimensional.
+\end{defn}
+
+\begin{defn}[Filtración estándar del Movimiento Browniano]
+  Sea $W$ un ,ovimiento Browniano $d$-dimensional. Definamos para $t >0$:
+  \[
+    \mathcal{F}^+_t = \bigcap_{\epsilon > 0}\sigma\left( W_s : 0 \leq s \leq t + \epsilon \right).
+  \]
+  Además, definimos la filtración estándar del moviemiento Browniano como la familia $\{\mathcal{F}_t\}_{t \geq 0}$ dada por $\mathcal{F}_t = \overline{\mathcal{F}^+_t}$. Donde la barra denota la completación de la $\sigma$-álgebra.
+\end{defn}
+
+Desde este punto en adelante, consideraremos un movimiento Browniano $W$ $d$-dimensional y la filtración estándar $\{\mathcal{F}_t\}_{t \geq 0}$ generada por $W$.
+
+\begin{defn}[Proceso simple]
+  Un proceso simple $\phi(t)$, $t \in [0,T]$, con valores en un espacio de Hilbert $H$ es de la forma
+  \[
+    \phi(t) = \sum_{m=0}^{k-1} \phi_m \mathbf{1}_{(t_m, t_{m+1}]}(t), \quad 0 = t_0 < t_1 < \ldots < t_k = T,
+  \]
+  donde cada $\phi_m$ es una variable aleatoria a valores en $H$, que es $\mathcal{F}_{t_m}$-medible.
+\end{defn}
+
+\begin{defn}[Integral estocástica para procesos simples]
+  Sea un proceso simple $\phi(t)$, $t \in [0,T]$, con valores en $L^1(\mathbb{R}^d; H)$. Para dicho proceso simple $\phi$, definimos la integral estocástica con respecto al movimiento Browniano $W$ como:
+  \[
+    \int_{0}^{t} \phi(s)\, dW(s) := \sum_{m=0}^{k-1} \phi_m\bigl(W_{t_{m+1} \wedge t} - W_{t_m \wedge t}\bigr), \quad t \in [0,T],
+  \]
+  que comúnmente denotamos por $\phi \cdot W(t)$. Además, definimos una norma asociada al proceso $\phi$ por:
+  \[
+    \|\phi\|_T := \left(\mathbb{E}\left[\int_0^T \|\phi(s)\|_{L^2(\mathbb{R}^{d}; H)}^2\, ds\right]\right)^{1/2}.
+  \]
+\end{defn}
+
+\begin{defn}[Martingalas cuadrádo integrables]
+  Sea $\left\{\mathcal{G}_t\right\}_{t \geq 0}$ una filtración de $\mathcal{F}$. Un proceso estocástico $X = (X_t)_{t \in [0, T]}$ a valores en $H$ es una martingala continua cuadrado integrable si:
+  \begin{enumerate}
+    \item $X$ es $\mathcal{F}_t$-medible para cada $t \geq 0$.
+    \item $\sup_{t \in [0, T]}\mathbb{E}[\|X_t\|_H^2] < \infty$.
+    \item $\mathbb{E}[X_t | \mathcal{F}_s] = X_s$ para todo $0 \leq s < t \leq T$.
+    \item $X$ tiene trayectorias continuas casi seguramente.
+  \end{enumerate}
+  El conjunto de todas las martingalas continuas cuadrado integrables, en $[0, T]$ se denota por $\mathcal{M}_T^2$. Este espacio es un espacio de Banach con la norma:
+  \[
+    \|X\|_{\mathcal{M}_T^2} = \left(\sup_{t \in [0, T]}\mathbb{E}\left[\|X_t\|_H^2\right]\right)^{1/2}.
+  \]
+\end{defn}
+
+\begin{prop}[]
+  Sea $\phi$ un proceso simple que satisface $\|\phi\|_T < \infty$. Entonces, el proceso integral estocástico $\phi \cdot W$ es una martingala continua en $[0,T]$, que verifica la siguiente identidad:
+  \[
+    \mathbb{E}\left[\|\phi \cdot W(t)\|_H^2\right] = \|\phi\|_t^2, \quad \text{para cada } t \in [0,T].
+  \]
+  en particular, como $\left\|\phi\right\|_t^2$ es creciente en $t$, se tiene que:
+  \[
+    \left\|\phi \cdot W\right\|_{\mathcal{M}_T^2} = \left(\sup_{t \in [0, T]}\mathbb{E}\left[\|\phi \cdot W(t)\|_H^2\right]\right)^{1/2} = \|\phi\|_T.
+  \]
+\end{prop}
+
+\begin{obs}[]
+  La integral estocástica $\phi \cdot W$ es un operador lineal desde el espacio de procesos simples con norma $\|\cdot\|_T$ al espacio de martingalas cuadrado integrables $\mathcal{M}_T^2$. Además, este operador es una isometría.
+\end{obs}
+
+\begin{defn}[Proceso predecible]
+  Un proceso $\phi$ es predecible si es medible respecto a la $\sigma$-álgebra generada por los conjuntos del tipo $A \times (s,t]$ con $0 \leq s \leq t$ y $A \in \mathcal{F}_s$.
+\end{defn}
+
+\begin{prop}[Extensión por aproximación]
+  Sea $\phi$ un proceso predecible con valores en $L^2(\mathbb{R}^d; H)$ que satisface:
+  \[
+    \|\phi\|_T = \left(\mathbb{E}\left[\int_0^T \|\phi(s)\|_{L^2}^2\, ds\right]\right)^{1/2} < \infty.
+  \]
+  Entonces, existe una sucesión $\{\phi_n\}_n$ de procesos simples que converge a $\phi$ en la norma $\|\cdot\|_T$, es decir,
+  \[
+    \|\phi - \phi_n\|_T \rightarrow 0, \quad \text{cuando } n \rightarrow \infty.
+  \]
+  Gracias a lo anterior, el siguiente límite está bien definido y se utiliza como definición de la integral estocástica del proceso $\phi$ respecto al movimiento Browniano $W$:
+  \[
+    \phi \cdot W(t) := \lim_{n \rightarrow \infty}\phi_n \cdot W(t), \quad t \in [0,T].
+  \]
+\end{prop}
+
+\begin{obs}[]
+  Lo anterior, además nos permite estimar númericamente la integral estocástica de un proceso predecible $\phi$ mediante la aproximación por procesos simples. En particular, si $\phi$ es un proceso predecible con valores en $L^2(\mathbb{R}^d; H)$, podemos aproximar:
+  \[
+    \phi \cdot W(t) \approx \sum_{m=0}^{k-1} \phi(t_m)\bigl(W_{t_{m+1} \wedge t} - W_{t_m \wedge t}\bigr),
+  \]
+  Donde $\phi_m = $ para todo $m \in \left\{0, \ldots, k-1\right\}$.
+\end{obs}
+
+\subsection{Ecuaciones estocásticas en dimensión infinita y sus soluciones}
+
+Consideremos:
+\begin{itemize}
+  \item $T > 0$.
+  \item $(\Omega, \mathcal{F}, \mathbb{P})$ un espacio de probabilidad.
+  \item $(H, \langle\cdot, \cdot\rangle_H)$ un espacio de Hilbert separable.
+  \item $X_t: [0, T] \times \Omega \to H$ es el proceso estocástico solución con trayectorias en $H$.
+  \item $A: \operatorname{ dom }(A) \subset H \to H$ una aplicación lineal continua.
+  \item $F: [0, T] \rightarrow H$.
+  \item $B: H \to L_2(\mathbb{R}^d; H)$.
+  \item $W_t$ es un Movimiento Browniano $d$-dimensional.
+  \item $\chi_0 \in H$.
+\end{itemize}
+
+\begin{defn}[Ecuación estocástica en dimensión infinita]
+  Una ecuación estocástica en dimensión infinita o ecuación estocástica con derivadas parciales (SPDE) es una ecuación de la forma:
+  \begin{equation}\label{eq:spde}
+    d X_t = (A X_t + F(t))dt + B(X_t) d W_t, \quad t \in [0, T],
+  \end{equation}
+  con condición inicial $X_0 = \chi_0 \in H$.
+
+  Decimos que $X$ es una solución fuerte de la ecuación \eqref{eq:spde} si es un proceso estocástico predecible a valores en $H$, tal que para todo $t \in [0, T]$ se cumple que $X(t) \in \operatorname{ dom }(A)$ y:
+  \begin{equation}\label{eq:spde_strong_sol}
+    X_t - \chi_0 = \underbrace{\int_0^t AX_s + F(s) ds}_{\text{Integral de Bochner}} + \underbrace{\int^t_0 B(X_s)dW_s}_{\text{Integral estocástica}}, \quad \mathbb{P}-c.s.
+  \end{equation}
+
+  Por otro lado, decimos que $X$ es una solución débil de la ecuación \eqref{eq:spde} si es un proceso estocástico predecible a valores en $H$, tal que las trayectorias de $X$ son $\mathbb{P}-c.s.$ Bochner integrable y se cumple que para todo $z \in \operatorname{ dom }(A^*)$ y para todo $t \in [0, T]$ se tiene que:
+  \begin{equation}\label{eq:spde_weak_sol}
+    \langle X_t, z \rangle_H - \langle \chi_0, z \rangle_H = \int_0^t \left\langle X_s , A^* z\right\rangle + \left\langle F(s), z\right\rangle ds  +  \left\langle z, \int^t_0 B(X(s)) dW_s\right\rangle_H, \quad \mathbb{P}-c.s.
+  \end{equation}
+\end{defn}
+
+\begin{prop}[]
+  Toda solución fuerte de la ecuación estocástica en dimensión infinita \eqref{eq:spde} es una solución débil de la misma ecuación.
+\end{prop}
+
+\begin{obs}[]
+  Esta no es la forma más general de una SPDE, pero es lo suficientemente general para el propósito de este trabajo.
+\end{obs}
+
+\subsection{Soluciones Mild de las SPDEs}
+
+En esta sección, introduciremos el concepto de solución más débil de una SPDE, conocido como solución mild.
+
+\begin{defn}[$C_0$-Semigrupo]
+  Una familia de operadores $(S_t)_{t \in [0,T]} \subseteq \mathcal{L}(H;H)$ es llamada un $C_0$-semigrupo si:
+  \begin{enumerate}
+    \item $S_0 = Id_H$, donde $Id_H$ es el operador identidad en $H$.
+    \item $S_s \circ S_t = S_{s + t},\, \forall s, t \in T$ tales que $s + t \leq t$.
+    \item $\lim_{t \to 0} S_t x = x$ para todo $x \in H$.
+  \end{enumerate}
+\end{defn}
+
+\begin{ej}[Semigrupo del Laplaciano]
+  Sea $A = \Delta: H^2(\mathcal{D}) \subseteq L^2(\mathcal{D}) \rightarrow L^2(\mathcal{D})$, con $\mathcal{D} \subseteq \mathbb{R}^{n}$ el operador Laplaciano. Entonces, el semigrupo asociado al operador Laplaciano esta dado por:
+  \[
+    S_t x =
+    \begin{cases}
+      Id, & \text{si } t = 0,\\
+      (u \mapsto \int_{\mathbb{R}^{n}} \phi_t(u - v)x(v) dv), & \text{si } t > 0,
+    \end{cases}
+  \]
+  para $t \in [0, T]$, con $\phi_t(y) = \frac{1}{(4\pi t)^{n/2}} e^{-\frac{\|y\|^2}{4t}}$ el núcleo del calor.
+\end{ej}
+
+Desde este punto en adelante, suponemos que:
+
+\begin{enumerate}
+  \item $A: \operatorname{dom}(A) \subseteq H \rightarrow H$ es el generador de un semigrupo $C_0$-semigroup $\left(S_t\right)_{t \in[0, T]}$.
+  \item El mapeo $B: H \rightarrow L_2\left(\mathbb{R}^d ; H\right)$ es $\mathcal{B}(H)/ \mathcal{B}\left(L_2\left(\mathbb{R}^d ; H\right)\right)$-medible.
+  \item Existe $C_B>0$ tal que $\forall x,y \in H$:
+    \[
+      \|B(x) - B(y)\|_{L_2(\mathbb{R}^d;H)} \leq C_{B} \|x - y\|_H,
+    \]
+    y:
+    \[
+      \|B(x)\|_{L_2(\mathbb{R}^d;H)}^2 \leq C_{B}^2 (1 + \|x\|_H^2).
+    \]
+  \item La condición inicial $\chi_0 \in H$ es determinista.
+\end{enumerate}
+
+\begin{defn}[Solución mild]
+  Una función $X: [0,T] \times \Omega \to H$ se llama mild solution de la ecuación \eqref{eq:spde} si es $\mathcal{F}$-predecible y cumple:
+  \[
+    \mathbb{P}\left( \int_0^T \|X_t\|_H^2 dt < \infty \right) = 1,
+  \]
+  y para todo $t \in [0, T]$,
+  \begin{equation}\label{eq:mild}
+    X_t = S_t \chi_0 + \int_0^t S_{t-s} B(X_s) \, dW_s, \quad \mathbb{P}\text{-c.s.}
+  \end{equation}
+\end{defn}
+
+\begin{teo}[Teorema de Existencia y Unicidad]
+  Bajo las suposiciones anteriores, existe una única solución mild $X: [0,T] \times \Omega \to H$ de la ecuación \eqref{eq:spde} que tiene trayectorias continuas en $H$. Además, existe una constante $C > 0$ tal que para todo $p \in [1,\infty)$:
+  \[
+    \mathbb{E}\left[ \sup_{t \in [0,T]} \|X_t\|_H^p \right] \leq C (1 + \|\chi_0\|_H^p).
+  \]
+\end{teo}
+
+\begin{prop}[]
+  Una solución débil de la ecuación \eqref{eq:spde} es una solución mild de la misma ecuación.
+\end{prop}
+
+\subsection{Expansión en caos de Wiener y Teorema de Cameron Martin}
+
+Esta sección veremos el resultado clave que nos permite aproximar la solución de una SPDE mediante redes neuronales. Este resultado es conocido como el teorema de Cameron Martin.
+
+\begin{defn}[Polinomios de Hermite]
+  La familia de polinomios de Hermite $(h_n)_{n \in \mathbb{N}_0}$ esta definida por:
+  $$
+  h_n: s\in \mathbb{R} \mapsto h_n(s) = (-1)^n\cdot e^{\frac{s^2}{2}} \frac{d^n}{d s^n}(e^{-\frac{s^2}{2}}) \in \mathbb{R},\quad n \in \mathbb{N}_0
+  $$
+\end{defn}
+
+Para representar la solución en función del ruido, usamos la expansión en caos de Wiener. Sea $\left(g_j\right)_{j \in \mathbb{N}}$ una base ortonormal de $L^2([0,T])$.
+
+\begin{ej}[Ejemplo de base ortonormal]
+  Una base ortonormal de $L^2([0,T])$ frecuentemente utilizada es la base $\mathcal{B} := (g_j)_{j \in \mathbb{N}^{*}}$ dada por:
+  \[
+    \begin{aligned}
+      g_1(t): [0, T] &\to \mathbb{R}, \quad g_1(t) = \frac{1}{\sqrt{T}}, \\
+      g_j(t): [0, T] &\to \mathbb{R}, \quad g_j(t) = \sqrt{\frac{2}{T}} \cos\left(\frac{(j - 1)\pi t}{T}\right), \quad j \geq 2.
+    \end{aligned}
+  \]
+\end{ej}
+
+Esta base es la que frencuentemente se utiliza en esta aplicación, más adelante veremos para que es útil.
+
+\begin{nota}[]
+  Denotemos
+  \begin{equation}
+    \xi_{i,j} := \int_0^T g_j(s) \, dW^{i}_s, \quad i \in [d], j \in \mathbb{N}
+  \end{equation}
+\end{nota}
+
+\begin{prop}[]
+  Se tiene que $(\xi_{i,j})_{i\in [d],j\in \mathbb{N}} \sim \mathcal{N}(0, 1)$ i.i.d.
+\end{prop}
+
+\begin{lema}[]
+  Sea $t \in [0, T], i \in \mathbb{N}^{*}$. Entonces, se tiene que:
+  \[
+    W_t = \sum_{i=1}^{d} \sum_{j=1}^{\infty} \xi_{i,j} \left(\int_0^t g_j(s) \, ds \right)e_i
+  \]
+  donde la suma converge con respecto a la norma $\|\, \cdot\,\|_{L^2(\Omega, \mathcal{F}, \mathbb{P})}$. Aquí $e_i$ es el $i$-ésimo vector canónico de $\mathbb{R}^d$.
+\end{lema}
+
+\begin{ej}[]
+  Para las funciones de la base ortonormal $\mathcal{B}$ del ejemplo anterior, tenemos que, para $0\leq t'<t \leq T$:
+  \[
+    \begin{aligned}
+      \int_{t'}^t g_1(s) \, ds &= \frac{t - t'}{\sqrt{T}}, \\
+      \int_{t'}^t g_j(s)\, ds &= \frac{\sqrt{2T}}{(j-1)\pi}\left( \sin \left( \frac{\pi(j-1)t}{T} \right) - \sin\left( \frac{\pi(j-1)t'}{T} \right) \right), \quad j \geq 2.
+    \end{aligned}
+  \]
+\end{ej}
+
+\begin{obs}[]
+  El lema anterior nos permite expresar el movimiento Browniano $W$ en termino de las variables aleatorias $\xi_{i,j}$, las cuales son independientes y tienen distribución normal estándar. Es decir, conciendo el valor de $\xi_{i,j}$, podemos reconstruir el movimiento Browniano $W$.
+\end{obs}
+
+Ahora vamos a definir algunas notaciones que nos serán utiles para definir los polinomios de Wick y posteriormente expresar una aproximación de la solución de la SPDE.
+
+\begin{nota}[]
+  \[
+    \mathcal{J} \;:=\; \left\{\alpha = (\alpha_{i,j})_{i,j \in \mathbb{N}} \in \mathbb{N}_{0}^{\mathbb{N} \times \mathbb{N}} \;\middle|\; |\alpha| \;:=\; \sum_{i,j=1}^{\infty}\alpha_{i,j} < \infty \right\}
+  \]
+
+  y definamos, para cada $\alpha \in \mathcal{J}$,
+  \[
+    \alpha! \;:=\; \prod_{i,j=1}^{\infty} \alpha_{i,j}!
+  \]
+
+  También consideremos, el conjunto de índices
+  \[
+    \mathcal{J}_{I, J, K} := \left\{ \alpha = (\alpha_{i,j})_{i,j \in \mathbb{N}} \in \mathbb{N}_0^{\mathbb{N} \times \mathbb{N}} \;\middle|\; \alpha_{i,j} = 0 \text{ si } i > I \text{ o } j > J,\; |\alpha| \leqslant K \right\} \subseteq \mathcal{J},
+  \]
+\end{nota}
+
+\begin{obs}[]
+  Se satisface que:
+  \[
+    \left|\mathcal{J}_{I, J, K}\right| = \sum_{k=0}^{K} \binom{IJ + k - 1}{k} = \frac{(IJ + K)!}{(IJ)!K!}
+  \]
+\end{obs}
+
+\begin{defn}[Polinomios de Wick]
+  La familia de polinomios de Wick $(\xi_\alpha)_{\alpha \in \mathcal{J}}$, esta definida por
+
+  \begin{equation}
+    \xi_\alpha : \omega \in \Omega \mapsto \xi_{
+    \alpha}(\omega) = \frac{1}{\sqrt{\alpha!}} \prod_{i,j} h_{\alpha_{i,j}}(\xi_{i,j} (\omega)), \quad \alpha \in \mathcal{J}
+  \end{equation}
+
+  donde $h_n(\cdot)$ es el $n$-ésimo polinomio de Hermite, y $\alpha$ es un multiíndice con soporte finito.
+\end{defn}
+
+\begin{prop}[]
+  Los polinomios de Wick forman una base ortonormal en $L^2(\Omega, \mathcal{F}_T, \mathbb{P})$.
+\end{prop}
+
+\begin{teo}[Teorema de Cameron Martin]
+  Sea $X$ la solución mild de la SPDE. Entonces, para todo $\varepsilon > 0$, existen $I, J, K \in \mathbb{N}$ y funciones $\left(x_\alpha\right)_{\alpha \in \mathcal{J}_{I,J,K}} \subset C([0,T]; H)$ tales que:
+
+  \[
+    \mathbb{E} \left[ \sup_{t \in [0,T]} \left\| X_t - \sum_{\alpha \in \mathcal{J}_{I,J,K}} x_\alpha(t) \xi_\alpha \right\|_H^p \right]^{1/p} < \varepsilon.
+  \]
+
+\end{teo}
+
+En el caso $p = 2$, la expansión converge en $L^2(\Omega; H)$ y los coeficientes se obtienen como:
+
+\[
+  x_\alpha(t) = \mathbb{E}[X_t \xi_\alpha].
+\]
+
+La expansión se puede dividir en:
+\[
+  X_t \approx x_0(t) + \sum_{|\alpha| = 1} x_\alpha(t) \xi_\alpha + \sum_{|\alpha| \geq 2} x_\alpha(t) \xi_\alpha,
+\]
+correspondiendo a una parte determinista, una parte gaussiana y una parte no-gaussiana, respectivamente.
+
+De esta forma, encontramos una manera de aproximar la solución utilizando un truncamiento sobre las sumas anteriores.

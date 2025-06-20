@@ -1,0 +1,28 @@
+\section{Variables aletorias en espacios de Hilbert}
+
+Consideremos $(\Omega, \mathcal{F}, \mathbb{P})$ un espacio de probabilidad y $(E, \|\cdot \|)$ un espacio de Banach separable, con dual $E^*$ y $\mathcal{B}(E)$ su $\sigma$-álgebra boreliana.
+
+Una función $X: \Omega \rightarrow E$, $\mathcal{F}-\mathcal{B}(E)$ medible, es una variable aleatoria a valores en $E$. Además, definimos su ley como la medida de probabilidad $\mathcal{L}(X)$ sobre $\mathcal{B}(E)$ dada por,
+$$
+\mathcal{L}(X)(A) = \mathbb{P}(\omega \in \Omega \mid X(\omega) \in A),\, \forall A \in \mathcal{B}(E)
+$$
+
+Además, sea $G$ un espacio de Banach y $\Psi: E \rightarrow G$ una función $\mathcal{B}(E)-\mathcal{B}(G)$ medible, se define
+
+$$
+\mathbb{E}[\Psi(X)] := \int_E \Psi(x) d \mathbb{P}(x)
+$$
+
+Donde la integral corresponde a una integral de Bochner.
+
+Ahora sea $p > 1$, se define
+$$
+\| X \|_p := (\mathbb{E}[\|X\|^p])^{1/p}
+$$
+Si $\|X\|_p < \infty$, decimos que $X \in L^p(\Omega, \mathcal{F}, \mathbb{P};  E)$.
+
+Sea ahora, $X \in L^2(\Omega, \mathcal{F}, \mathbb{P}; H)$ con $H$ un espacio de Hilbert con producto interno $\langle \cdot, \cdot \rangle$. Se define su operador de covarianza por,
+
+$$
+\operatorname{Cov}(X): h \in H \rightarrow \mathbb{E}[X - \mathbb{E}[X]]\langle X - \mathbb{E}[X], h \rangle \in H
+$$

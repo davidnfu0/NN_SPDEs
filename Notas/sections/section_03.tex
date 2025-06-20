@@ -1,0 +1,84 @@
+\section{Aproximación por redes neuronales}
+
+\subsection{Redes neuronales feedforward}
+
+\begin{defn}[Red neuronal]
+  Para $T>0$ y $U \subseteq \mathbb{R}^m$, una red neuronal es de la forma
+
+  $$
+  [0, T] \times U \ni(t, u) \quad \mapsto \quad \varphi(t, u):=\sum_{n=1}^N y_n \rho\left(a_{0, n} t+a_{1, n}^{\top} u-b_n\right) \in \mathbb{R}^d
+  $$
+  para algún $N \in \mathbb{N}$ el número de neuronas y algún $\rho \in{\overline{C_b^k(\mathbb{R})}}^\gamma$ La función de activación. Los parámetros consisten en los pesos $a_{0,1}, \ldots, a_{0, N} \in \mathbb{R}$ y $a_{1,1}, \ldots, a_{1, N} \in \mathbb{R}^m$, los sesgos $b_1, \ldots, b_N \in \mathbb{R}$, y las funciones lineales de salida $y_1, \ldots, y_N \in \mathbb{R}^d$. Consideraremos esta estructura de aquí en adelante, es decir, redes neuronales con solo una capa oculta.
+
+  En el caso de que no exista una dependencia temporal, podemos definir la red neuronal de la forma
+  $$U \ni u \mapsto \varphi(u):=\sum_{n=1}^N y_n \rho\left(a_{1, n}^{\top} u_n-b_n\right) \in \mathbb{R}^d$$.
+\end{defn}
+
+\subsection{Teorema de aproximación universal}
+
+El teorema de aproximación universal de redes neuronales establece que toda función continua puede aproximarse a partir de redes neuronales como las definidas anteriormente. En particular, podemos aproximar los propagadores $\left(x_\alpha\right)_{\alpha \in \mathcal{J}_{I, J, K}} \subseteq C^0([0, T] ; H)$. En base a esto y al teorema de Cameron-Martin tenemos el siguiente resultado.
+
+\begin{teo}[]
+  Supongamos que para $k \in \mathbb{N}_0, U \subseteq \mathbb{R}^m$ (abierto, si $k \geqslant 1$ ), y $\gamma \in(0, \infty)$, sea $\left(H,\langle\cdot, \cdot\rangle_H\right)$ un espacio de Hilbert de funciones $f: U \rightarrow \mathbb{R}^d$ tales que el mapeo de restricción
+  $$
+  \left.\left(C_b^k\left(\mathbb{R}^m ; \mathbb{R}^d\right),\|\cdot\|_{C_{p o l, \gamma}^k\left(\mathbb{R}^m ; \mathbb{R}^d\right)}\right) \ni f \quad \mapsto \quad f\right|_U \in\left(H,\|\cdot\|_H\right)
+  $$
+  es un embedding continuo y denso, i.e. es continuo y su imagen es densa en $\left(H,\|\cdot\|_H\right)$.
+
+  Sea $\rho \in{\overline{C_b^k(\mathbb{R})}}^\gamma$ no polinomial, y sea $p \in[1, \infty)$. Más aún, supongamos que las suposiciones del teorema de existencia y unicidad se tienen, y sea $X:[0, T] \times \Omega \rightarrow H$ la mild solution de la (SPDE). Entonces, para todo $\varepsilon>0$ existen $I, J, K \in \mathbb{N}$ y $\left(\varphi_\alpha\right)_{\alpha \in \mathcal{J}_{I, J, K}} \subseteq \mathcal{N} \mathcal{N}_{[0, T] \times U, d}^\rho$ tales que
+  $$
+  \mathbb{E}\left[\sup _{t \in[0, T]}\left\|X_t-\sum_{\alpha \in \mathcal{J}_{I, J, K}} \varphi_\alpha(t, \cdot) \xi_\alpha\right\|_H^p\right]^{\frac{1}{p}}<\varepsilon
+  $$
+\end{teo}
+
+\subsection{Algoritmo de aproximación de solución de SPDE.}
+
+Como se explico en la sección anterior , podemos aproximar la solución mild de la SPDE de la siguiente forma:
+\[X_t \approx \sum_{\alpha \in \mathcal{J}_{I, J, K}} \varphi_\alpha(t, \cdot) \xi_\alpha\]
+
+Con $I, J, K \in \mathbb{N}$ y $\left(\varphi_\alpha\right)_{\alpha \in \mathcal{J}_{I, J, K}} \subseteq \mathcal{N} \mathcal{N}_{[0, T] \times U, d}^\rho$. Donde buscamos encontrar los parámetros adecuados para cada $\varphi_\alpha$, las redes las entrenaremos desde un enfoque no supervisado (sin utilizar puntos conocidos del grafo de la solución, pero de quererse tambien es posible integrar esta informacion) definiendo una función de perdida que nos informe de que tan bien se ajustan los parámetros a la SPDE. Aproximaremos nuestra solución por el proceso $X^{(I,J,K)}: [0,T] \times \Omega \rightarrow H$, dado por:
+\[X_t^{(I,J,K)} := \sum_{\alpha \in \mathcal{J}_{I, J, K}} \varphi_\alpha(t, \cdot) \xi_\alpha\]
+
+Utilizamos como función de perdida el error empírico de Sobolev (con pesos) y con los hiperparámetros $M_1,M_2, M_3 \in \mathbb{N}$, $(\omega_{m_1})_{m_1=1}^{M_1} \subseteq \Omega$, $0 \leq t_1 < t_2 < \dots < t_{M_2} \leq T$, $(u_{m_3})_{m_3=1}^{M_3} \subseteq U \subseteq \mathbb{R}^m$ y por ultimo los coeficientes que determinan la contribución de las derivadas, dependientes de $\beta \in \mathbb{N}_{0,k}^m,m_1 \in [M_1],m_2 \in [M_2]_0, m_3 \in [M_3],\quad c_{\beta,m_1,m_2,m_3} \in [0,\infty)$  (donde k es el numero de veces que podemos diferenciar débilmente la solución)
+\[
+  L(X^{(I,J,K)};\Theta) := (\sum_{m_1=1}^{M_1}\sum_{m_2=0}^{M_2}\sum_{m_3=1}^{M_3}\sum_{\beta \in \mathbb{N}_{0,k}^m} c_{\beta,m_1,m_2,m_3} |l(X^{(I,J,K)},\omega_{m1},t_{m_2},u_{m_3},\beta)|^2)^{\frac{1}{2}}
+\]
+Donde,
+
+\begin{align*}
+  l(X^{(I,J,K)},\omega_{m1},t_{m_2},u_{m_3},\beta) :=\ & \partial_{\beta}X^{(I,J,K)}_{t_{m_2}}(\omega_{m1})(u_{m_3}) - \partial_{\beta}[\chi_0\\
+    +\ & \sum_{l=1}^{m_2} AX^{(I,J,K)}_{t_{l-1}}(\omega_{m1}) (t_{l} - t_{l-1})\\
+  +\ & \sum_{l=1}^{m_2} \langle B(X^{(I,J,K)}_{t_{l-1}}(\omega_{m1})); W^{(I,J)}_{t_{l}}(\omega_{m1}) - W^{(I,J)}_{t_{l-1}}(\omega_{m1}) \rangle ](u_{m_3})
+\end{align*}
+
+% Aqui escribimos el algoritmo
+\begin{algorithm}
+  \caption{Algoritmo de aproximacion de solucion de la SPDE}
+  \label{alg:algoritmo_redes}
+  \begin{algorithmic}[1]
+    \Require $I,J,K \in \mathbb{N}$, la C.I. $\chi_0 \in H$ y los coeficientes A, B de la SPDE.
+    \Ensure Aproximación de la solucion $X^{(I,J,K)}: [0,T] \times \Omega \rightarrow H$
+    \State Simular $I \cdot J \cdot M_1 $ realizaciones de $\xi_{i,j}(w_{m_1})$ de v.a. i.i.d. $\mathcal{N}(0,1)$
+
+    \For{$m_1=1,\dots,M_1$ y $m_2=1,\dots,M_2$ calcular el MB aproximado}
+    \Comment{Calcular el MB aproximado.}
+    \State $W^{(I,J)}_{t_{m_2}}(\omega_{m1}) = \sum_{i=1}^{I}\sum_{j=1}^{J}\xi_{i,j}(w_{m_1})(\int_0^{t_{m_2}}g_j(s)ds) e_i$
+    \EndFor
+
+    \For{$m_1=1,\dots,M_1$ y $\alpha \in \mathcal{J}_{(I,J,K)}$}
+    \Comment{Calcular los polinomios de Wick.}
+    \State $\xi_{\alpha}(\omega_{m1}) = \frac{1}{\sqrt{\alpha!}} \prod_{i=1,j=1}^{\infty} h_{\alpha_{i,j}}(\xi_{i,j}(w_{m_1}))$
+    \EndFor
+
+    \State escoger $\rho$ función de activación.
+
+    \For{$\alpha \in \mathcal{J}_{(I,J,K)}$}
+    \State Inicializar las redes descritas anteriormente $\varphi_{\alpha}(t,\cdot)$
+    \EndFor
+
+    \State Inicializar el proceso $X_t^{(I,J,K)}(\omega) := \sum_{\alpha \in \mathcal{J}_{I, J, K}} \varphi_\alpha(t, \cdot) \xi_\alpha(\omega)$
+
+    \State Minimizar $L(X^{(I,J,K)};\Theta)$ con $\Theta$ los parametros de las redes usando descenso de gradiente estocástico.
+    \State \Return $X^{(I,J,K)}: [0,T] \times \Omega \rightarrow H$
+  \end{algorithmic}
+\end{algorithm}

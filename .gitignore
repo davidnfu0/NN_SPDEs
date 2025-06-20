@@ -1,0 +1,103 @@
+# Compiled source
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages
+*.jar
+*.war
+*.ear
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+*.swo
+*.orig
+
+# Backup files
+*.~*
+*.bak
+*.old
+*.backup
+
+# General
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Media files outside resources folder
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.mp4
+*.mp3
+*.wav
+*.flac
+*.avi
+*.mov
+!resources/**/*.jpg
+!resources/**/*.jpeg
+!resources/**/*.png
+!resources/**/*.gif
+!resources/**/*.bmp
+!resources/**/*.tiff
+!resources/**/*.mp4
+!resources/**/*.mp3
+!resources/**/*.wav
+!resources/**/*.flac
+!resources/**/*.avi
+!resources/**/*.mov
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Jupyter config
+.jupyter/
+
+# IPython and matplotlib
+ipython_config.py
+matplotlibrc
+.history
+
+# References and files
+Referencias/
+*.pkl
+
+# LaTeX trash files
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc

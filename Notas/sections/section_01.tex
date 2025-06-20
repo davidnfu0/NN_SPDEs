@@ -1,0 +1,36 @@
+\section{Introducción y algunas ecuaciones importantes}
+
+\subsection{Introducción}
+El tipo de ecuaciones que se estudiaran en este trabajo son una generalización de las ecuaciones diferencias estocásticas (EDEs), aveces llamadas ecuaciones de Itô. La generalización a espacios de dimensión infinita, es útil y necesaria para, por ejemplo, resolver ecuaciones estocásticas de tipo parabolico, es decir, ecuaciones que involuacran derivadas parciales en tiempo y en espacio, además de una fuente de aleatoriedad. El estudio análitico de este tipo de ecuaciones es complejo y en la gran mayoría de los casos no se pueden encontrar soluciones explícitas, lo que hace necesario recurrir a métodos numéricos para simular sus soluciones.
+
+En este trabajo simularemos la solución de una ecuación estocástica en dimensión infinita, utilizando redes neuronales. Para ello introduciremos formalmente el concepto de ecuación estocástica en dimensión infita y haremos uso de resultados importantes de la teoría de procesos estocásticos y ecuaciones diferenciales estocásticas. Además, presentaremos resultados teóricos de aproximación mediante redes neuronales y explicitaremos un algoritmo que permita construir una red neuronal para simular la solución de una ecuación dada. Para finalizar, mostraremos ejemplos de implementaciones en \textit{Python} y discutiremos los resultados obtenidos.
+
+\subsection{Algunas ecuaciones importantes}
+
+Estas ecuaciones pueden describir fenómenos aleatorios en multiples áreas del conocimiento. Algunas aplicaciones incluyen modelos en física estadística, finanzas, ingeniería, química y biología.
+
+\subsubsection{Ecuación del calor estocástica con ruido aditivo}
+
+La ecuación del calor usual en dimensión 1 es una EDP de la siguiente forma:
+
+\[
+  \partial_t u(t,x) = \sigma\partial_{xx} u(t,x) + f(t,x), \quad t \in [0,T], x \in \mathcal{D}
+\]
+
+donde $f$ es un término fuente que puede depender del tiempo y del espacio, $\mathcal{D} \subseteq \mathbb{R}$ y $\sigma >0$ es un coeficiente de difusividad térmica. Esta ecuación describe, por ejemplo, la difusión de calor en un medio, también es ampliamente utilizada en finanzas para modelar la evolución de precios de activos.
+
+Su versión estocástica con ruido aditivo es una ecuación de la siguiente forma:
+
+\[
+  \partial_t u(t,x) = \sigma\partial_{xx} u(t,x) + f(t,x) + \dot{W}(t,x), \quad t \in [0,T], x \in \mathcal{D}
+\]
+
+donde $\dot{W}(t,x)$ es un ruido blanco tiempo espacial, que representa una perturbación aleatoria en el sistema, que tiene media nula en cada punto espacio temporal y varianza unitaria, además, es independiente en el tiempo y en el espacio, esto puede representar, por ejeplo, una fuente de calor aleatoria que esta afectando al sistema.
+
+Es importante notar que el término $\dot{W}(t,x)$ es un proceso estocástico y por lo tanto, esta asociado a un espacio de probabilidad subyacente $(\Omega, \mathcal{F}, \mathbb{P})$. Luego la ecuación anterior también se puede escribir como:
+
+\[
+  \partial_t u(t,x ;\omega) = \sigma\partial_{xx} u(t,x ; \omega) + f(t,x ; \omega) + \dot{W}(t,x ; \omega), \quad t \in [0,T], x \in \mathcal{D}, \omega \in \Omega
+\]
+
+Entonces la solución de esta ecuación es un proceso estocástico $u(t,x ; \omega)$ que depende del tiempo, del espacio y de la realización $\omega$.

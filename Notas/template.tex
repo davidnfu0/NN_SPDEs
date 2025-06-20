@@ -1,0 +1,129 @@
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[left=2cm,top=2cm,right=2cm,bottom=2cm,letterpaper]{geometry}
+\usepackage{url}
+\usepackage{dirtytalk}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{mdframed}
+\usepackage{dsfont}
+\usepackage{xpatch}
+\usepackage[many]{tcolorbox}
+\usepackage{xcolor}
+\usepackage{amsfonts}
+\usepackage{multicol}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{cancel}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{mathpazo}
+\usepackage{subfiles}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{datetime2}
+\renewcommand{\contentsname}{
+  \normalsize
+  \begin{center}
+    Índice de contenidos
+  \end{center}
+  \normalsize
+\vspace{-3em}}
+\DTMsetstyle{ddmmyyyy}
+\renewcommand{\refname}{Referencias}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+\setlength{\abovecaptionskip}{4pt}
+\setlength{\belowcaptionskip}{4pt}
+\setlength{\textfloatsep}{6pt}
+\setlength{\floatsep}{6pt}
+\setlength{\intextsep}{6pt}
+
+\definecolor{gray}{rgb}{0.95,0.95,0.95}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{magenta}{rgb}{1,0,1}
+\lstdefinestyle{mystyle}{
+  backgroundcolor=\color{backcolour},
+  commentstyle=\color{codegreen},
+  keywordstyle=\color{magenta},
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=left,
+  numbersep=5pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2
+}
+\lstset{style=mystyle}
+
+\newtheorem{lema}{Lema}[section]
+\newtheorem{prop}{Proposición}[section]
+\newtheorem{cor}{Corolario}[section]
+\theoremstyle{definition}
+\newtheorem{teo}{Teorema}
+\newtheorem{defn}{Definición}[section]
+\newtheorem*{nota}{Notación}
+\newtheorem{ejer}{Ejercicio}[section]
+\newtheorem*{prob}{Problema}
+\newtheorem{alg}{Algoritmo}
+\newtheorem{dem}{Demostración}[section]
+\newtheorem*{sol}{Solución}
+\theoremstyle{remark}
+\newtheorem*{ej}{Ejemplo}
+\newtheorem*{rmk}{Recuerdo}
+\newtheorem*{com}{Comentario}
+\newtheorem*{obs}{\textbf{Observación}}
+
+\tcolorboxenvironment{teo}{colframe=black,colback=gray,sharp corners=northwest}
+\tcolorboxenvironment{defn}{colframe=gray,colback=gray,sharp corners=northwest}
+\tcolorboxenvironment{prob}{colframe=gray,colback=gray,sharp corners=northwest}
+\tcolorboxenvironment{alg}{colframe=gray,colback=gray,sharp corners=northwest}
+\tcolorboxenvironment{dem}{
+  breakable,
+  enhanced,
+  borderline west={2pt}{0pt}{black},
+  sharp corners=northwest,
+  boxrule=0pt,
+  frame hidden,
+  colback=white,
+  left=10pt,
+  right=10pt,
+}
+\tcolorboxenvironment{sol}{
+  breakable,
+  enhanced,
+  borderline west={2pt}{0pt}{black},
+  sharp corners=northwest,
+  boxrule=0pt,
+  frame hidden,
+  colback=white,
+  left=10pt,
+  right=10pt,
+}
+\tcolorboxenvironment{ej}{
+  enhanced,
+  borderline west={2pt}{0pt}{black},
+  sharp corners=northwest,
+  boxrule=0pt,
+  frame hidden,
+  colback=gray,
+  left=10pt,
+  right=10pt,
+}
+\tcolorboxenvironment{obs}{colframe=gray,colback=gray,sharp corners=northwest}
