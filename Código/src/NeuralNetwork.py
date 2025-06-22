@@ -156,7 +156,9 @@ class NeuralNetwork(nn.Module):
         self.to(device)
         # Asegura que space_domain sea un tensor, y muévelo al device
         if not isinstance(space_domain, torch.Tensor):
-            space_domain = torch.as_tensor(space_domain, dtype=torch.float32, device=device)
+            space_domain = torch.as_tensor(
+                space_domain, dtype=torch.float32, device=device
+            )
         else:
             space_domain = space_domain.to(device)
 
@@ -167,6 +169,7 @@ class NeuralNetwork(nn.Module):
 
         # Entrenamos durante el número de épocas especificado
         for epoch in range(epochs):
+            omega_loss = []
             for bpath_n in range(self.n_bpaths):
                 self.omega = bpath_n  # Actualiza la normal que se está utilizando
                 opt.zero_grad()  # Resetea los gradientes de los parámetros
@@ -175,16 +178,21 @@ class NeuralNetwork(nn.Module):
                 )  # Calcula la pérdida
                 loss.backward()  # Calcula los gradientes
                 opt.step()  # Actualiza los parámetros del modelo
-                loss_list.append(loss.item())  # Almacena el valor de la pérdida
+                omega_loss.append(loss.item())
+            loss_list.append(
+                sum(omega_loss) / len(omega_loss)
+            )  # Almacena el valor de la pérdida
 
-                # Si se mejora la pérdida, guardamos los pesos del modelo
-                if loss.item() < best_loss:
-                    best_loss = loss.item()
-                    self.save_weights(model_name)
+            # Si se mejora la pérdida, guardamos los pesos del modelo
+            if loss_list[-1] < best_loss:
+                best_loss = loss_list[-1]
+                self.save_weights(model_name)
 
             # Imprime el progreso cada 10 épocas
             if epoch % 10 == 0:
-                print(f"Epoch {epoch}, Omega: {self.omega}, Loss: {loss.item()}")
+                print(
+                    f"Epoch {epoch}, Loss: {loss_list[-1]:.4f}, Best Loss: {best_loss:.4f}"
+                )
 
         # Carga el mejor modelo guardado
         self.load_weights(model_name)
