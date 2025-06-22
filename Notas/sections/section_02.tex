@@ -2,7 +2,7 @@
 
 \subsection{Preliminares}
 
-Durante esta sección consideramos un espacio de probabilidad $(\Omega, \mathcal{F}, \mathbb{P})$.
+A lo largo de esta sección consideramos un espacio de probabilidad $(\Omega, \mathcal{F}, \mathbb{P})$.
 
 \begin{defn}[Movimiento Browniano]
   Un proceso $W:=\left(W_t\right)_{t \in[0, \infty)}:[0, \infty) \times \Omega \rightarrow \mathbb{R}$ se denomina Movimiento Browniano si:
@@ -19,7 +19,7 @@ Durante esta sección consideramos un espacio de probabilidad $(\Omega, \mathcal
   \[
     X: \Omega \rightarrow \mathcal{C}([0 ,\infty))
   \]
-  con $X: \mathcal{F}-\mathcal{B}(\mathcal{C}([0, \infty)))$ medible donde $\mathcal{C}([0, \infty))$ está dotado de la topología de la convergencia uniforme en compactos.
+  con $X \in \mathcal{F}-\mathcal{B}(\mathcal{C}([0, \infty)))$ medible donde $\mathcal{C}([0, \infty))$ está dotado de la topología de la convergencia uniforme en compactos.
 \end{obs}
 
 \begin{teo}[Existencia y unicidad del Movimiento Browniano]
@@ -35,11 +35,11 @@ Durante esta sección consideramos un espacio de probabilidad $(\Omega, \mathcal
 \end{defn}
 
 \begin{defn}[Filtración estándar del Movimiento Browniano]
-  Sea $W$ un ,ovimiento Browniano $d$-dimensional. Definamos para $t >0$:
+  Sea $W$ un movimiento Browniano $d$-dimensional. Definamos para $t >0$:
   \[
     \mathcal{F}^+_t = \bigcap_{\epsilon > 0}\sigma\left( W_s : 0 \leq s \leq t + \epsilon \right).
   \]
-  Además, definimos la filtración estándar del moviemiento Browniano como la familia $\{\mathcal{F}_t\}_{t \geq 0}$ dada por $\mathcal{F}_t = \overline{\mathcal{F}^+_t}$. Donde la barra denota la completación de la $\sigma$-álgebra.
+  Además, definimos la filtración estándar del movimiento Browniano como la familia $\{\mathcal{F}_t\}_{t \geq 0}$ dada por $\mathcal{F}_t = \overline{\mathcal{F}^+_t}$. Donde la barra denota la completación de la $\sigma$-álgebra.
 \end{defn}
 
 Desde este punto en adelante, consideraremos un movimiento Browniano $W$ $d$-dimensional y la filtración estándar $\{\mathcal{F}_t\}_{t \geq 0}$ generada por $W$.
@@ -63,7 +63,7 @@ Desde este punto en adelante, consideraremos un movimiento Browniano $W$ $d$-dim
   \]
 \end{defn}
 
-\begin{defn}[Martingalas cuadrádo integrables]
+\begin{defn}[Martingalas cuadrado integrables]
   Sea $\left\{\mathcal{G}_t\right\}_{t \geq 0}$ una filtración de $\mathcal{F}$. Un proceso estocástico $X = (X_t)_{t \in [0, T]}$ a valores en $H$ es una martingala continua cuadrado integrable si:
   \begin{enumerate}
     \item $X$ es $\mathcal{F}_t$-medible para cada $t \geq 0$.
@@ -71,14 +71,14 @@ Desde este punto en adelante, consideraremos un movimiento Browniano $W$ $d$-dim
     \item $\mathbb{E}[X_t | \mathcal{F}_s] = X_s$ para todo $0 \leq s < t \leq T$.
     \item $X$ tiene trayectorias continuas casi seguramente.
   \end{enumerate}
-  El conjunto de todas las martingalas continuas cuadrado integrables, en $[0, T]$ se denota por $\mathcal{M}_T^2$. Este espacio es un espacio de Banach con la norma:
+  El conjunto de todas las martingalas continuas cuadrado integrables en $[0, T]$ se denota por $\mathcal{M}_T^2$. Este espacio es de Banach con la norma:
   \[
     \|X\|_{\mathcal{M}_T^2} = \left(\sup_{t \in [0, T]}\mathbb{E}\left[\|X_t\|_H^2\right]\right)^{1/2}.
   \]
 \end{defn}
 
 \begin{prop}[]
-  Sea $\phi$ un proceso simple que satisface $\|\phi\|_T < \infty$. Entonces, el proceso integral estocástico $\phi \cdot W$ es una martingala continua en $[0,T]$, que verifica la siguiente identidad:
+  Sea $\phi$ un proceso simple que satisface $\|\phi\|_T < \infty$. Entonces, el proceso integral estocástico $\phi \cdot W$ es una martingala continua en $[0,T]$ que verifica la siguiente identidad:
   \[
     \mathbb{E}\left[\|\phi \cdot W(t)\|_H^2\right] = \|\phi\|_t^2, \quad \text{para cada } t \in [0,T].
   \]
@@ -116,12 +116,13 @@ Desde este punto en adelante, consideraremos un movimiento Browniano $W$ $d$-dim
   \[
     \phi \cdot W(t) \approx \sum_{m=0}^{k-1} \phi(t_m)\bigl(W_{t_{m+1} \wedge t} - W_{t_m \wedge t}\bigr),
   \]
-  Donde $\phi_m = $ para todo $m \in \left\{0, \ldots, k-1\right\}$.
+  donde $\{t_m\}_{m=0}^{k-1}$ es una partición del intervalo $[0,T]$.
 \end{obs}
 
 \subsection{Ecuaciones estocásticas en dimensión infinita y sus soluciones}
 
 Consideremos:
+\vspace{-1em}
 \begin{itemize}
   \item $T > 0$.
   \item $(\Omega, \mathcal{F}, \mathbb{P})$ un espacio de probabilidad.
@@ -162,7 +163,7 @@ Consideremos:
 
 \subsection{Soluciones Mild de las SPDEs}
 
-En esta sección, introduciremos el concepto de solución más débil de una SPDE, conocido como solución mild.
+En esta sección introduciremos el concepto de solución más débil de una SPDE, conocido como solución mild.
 
 \begin{defn}[$C_0$-Semigrupo]
   Una familia de operadores $(S_t)_{t \in [0,T]} \subseteq \mathcal{L}(H;H)$ es llamada un $C_0$-semigrupo si:
@@ -194,7 +195,7 @@ Desde este punto en adelante, suponemos que:
     \[
       \|B(x) - B(y)\|_{L_2(\mathbb{R}^d;H)} \leq C_{B} \|x - y\|_H,
     \]
-    y:
+    y
     \[
       \|B(x)\|_{L_2(\mathbb{R}^d;H)}^2 \leq C_{B}^2 (1 + \|x\|_H^2).
     \]
@@ -246,7 +247,7 @@ Para representar la solución en función del ruido, usamos la expansión en cao
   \]
 \end{ej}
 
-Esta base es la que frencuentemente se utiliza en esta aplicación, más adelante veremos para que es útil.
+Esta base es la que frecuentemente se utiliza en esta aplicación. Más adelante veremos para que es útil.
 
 \begin{nota}[]
   Denotemos
@@ -278,10 +279,10 @@ Esta base es la que frencuentemente se utiliza en esta aplicación, más adelant
 \end{ej}
 
 \begin{obs}[]
-  El lema anterior nos permite expresar el movimiento Browniano $W$ en termino de las variables aleatorias $\xi_{i,j}$, las cuales son independientes y tienen distribución normal estándar. Es decir, conciendo el valor de $\xi_{i,j}$, podemos reconstruir el movimiento Browniano $W$.
+  El lema anterior nos permite expresar el movimiento Browniano $W$ en términos de las variables aleatorias $\xi_{i,j}$, las cuales son independientes y tienen distribución normal estándar. Es decir, conociendo el valor de $\xi_{i,j}$, podemos reconstruir el movimiento Browniano $W$.
 \end{obs}
 
-Ahora vamos a definir algunas notaciones que nos serán utiles para definir los polinomios de Wick y posteriormente expresar una aproximación de la solución de la SPDE.
+Ahora vamos a definir algunas notaciones que nos serán útiles para definir los polinomios de Wick y posteriormente expresar una aproximación de la solución de la SPDE.
 
 \begin{nota}[]
   \[

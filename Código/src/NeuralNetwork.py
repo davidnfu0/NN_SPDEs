@@ -146,7 +146,7 @@ class NeuralNetwork(nn.Module):
         loss_function (function): La función de pérdida para optimizar el modelo.
         initial_condition (function): La condición inicial del modelo (la función que representa la condición inicial en el tiempo).
         epochs (int): El número de épocas para entrenar el modelo.
-        optimizer (torch.optim.Optimizer): El optimizador utilizado para actualizar los pesos (por defecto es Adam).
+        optimizer (torch.optim.Optimizer): El optimizador utilizado para actualizar los pesos (por defecto es SGD).
         lr (float): La tasa de aprendizaje para el optimizador.
 
         Returns:
@@ -154,7 +154,11 @@ class NeuralNetwork(nn.Module):
         """
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.to(device)
-        space_domain = space_domain.to(device)
+        # Asegura que space_domain sea un tensor, y muévelo al device
+        if not isinstance(space_domain, torch.Tensor):
+            space_domain = torch.as_tensor(space_domain, dtype=torch.float32, device=device)
+        else:
+            space_domain = space_domain.to(device)
 
         self.train()  # Pone la red en modo de entrenamiento
         opt = optimizer(self.parameters(), lr=lr)  # Inicializa el optimizador
@@ -178,8 +182,8 @@ class NeuralNetwork(nn.Module):
                     best_loss = loss.item()
                     self.save_weights(model_name)
 
-            # Imprime el progreso cada 100 épocas
-            if epoch % 100 == 0:
+            # Imprime el progreso cada 10 épocas
+            if epoch % 10 == 0:
                 print(f"Epoch {epoch}, Omega: {self.omega}, Loss: {loss.item()}")
 
         # Carga el mejor modelo guardado

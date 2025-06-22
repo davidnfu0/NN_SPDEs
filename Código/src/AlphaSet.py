@@ -2,6 +2,7 @@ import numpy as np
 import itertools as itt
 import pickle as pkl
 from src.Alpha import Alpha
+from itertools import combinations_with_replacement
 
 
 def int_g(T, j, t_init, t_end):
@@ -59,6 +60,8 @@ class AlphaSet:
     calculate_wick_values(): Calcula los valores de los polinomios de Wick para cada normal y alpha.
     calculate_increments(): Calcula los incrementos del movimiento Browniano para cada normal.
     evaluate_paths(): Evalúa los caminos del movimiento Browniano a partir de los incrementos.
+    save_alpha_set(filename): Guarda el alpha set en un archivo.
+    _build_G(): Construye y guarda la matriz G[k,j] = ∫_{t_k}^{t_{k+1}} g_j de forma vectorizada.
     """
 
     def __init__(self, I: int, J: int, K: int, n: int, T: float) -> None:
@@ -83,6 +86,7 @@ class AlphaSet:
         self.brownian_increments = []
         self.brownian_paths = []
         self.normals = []
+        self._G = None # matriz G[k,j]
 
     def calculate_card(self):
         """
@@ -101,8 +105,12 @@ class AlphaSet:
         calcula el factorial y la constante de Wick para cada combinación generada. Finalmente, almacena
         las instancias de la clase Alpha en el diccionario `self.alphas`, agrupadas por el grado del polinomio.
         """
+        # Reinicializa el diccionario
+        self.alphas = {k: [] for k in range(self.K + 1)}
+
         i, j, k = self.I, self.J, self.K
-        for alpha_matrix in itt.product(range(k + 1), repeat=i * j):
+
+        for alpha_matrix in itt.product(range(k + 1), repeat = i * j):
             total = sum(alpha_matrix)
             if total <= k:
                 alpha = Alpha(i, j, np.reshape(alpha_matrix, (i, j)))
@@ -110,6 +118,10 @@ class AlphaSet:
                 alpha.calculate_wick_constant()
 
                 self.alphas[total].append(alpha)
+
+        # Orden canónico para correspondencia por índice
+        for k in range(k + 1):
+            self.alphas[k].sort(key=lambda a: tuple(a.values.flatten()))
 
     def calculate_wick_values(self):
         """
@@ -164,3 +176,107 @@ class AlphaSet:
         """
         with open(filename, "wb") as f:
             pkl.dump(self, f)
+
+
+
+    # Métodos más eficientes
+
+    def calculate_alphas_fast(self):
+        
+        # Reinicializa el diccionario
+        self.alphas = {k: [] for k in range(self.K + 1)}
+        i, j, k = self.I, self.J, self.K
+        indices = np.arange(i * j, dtype=int)
+        
+        for deg in range(k + 1):
+            alphas_deg = []
+            if deg == 0:
+                vals = np.zeros((i, j), dtype=int)
+                alpha = Alpha(i, j, vals)
+                alpha.calculate_factorial()
+                alpha.calculate_wick_constant()
+                alphas_deg.append(alpha)
+            else:
+                for combo in combinations_with_replacement(indices, deg):
+                    counts = np.bincount(combo, minlength=i * j)
+                    vals = counts.reshape(i, j)
+                    alpha = Alpha(i, j, vals)
+                    alpha.calculate_factorial()
+                    alpha.calculate_wick_constant()
+                    alphas_deg.append(alpha)
+
+            # Orden canónico lexicográfico
+            alphas_deg.sort(key=lambda a: tuple(a.values.flatten()))
+            self.alphas[deg] = alphas_deg
+
+    def _build_G(self):
+        """
+        Construye y guarda en self._G la matriz G[k,j] = ∫_{t_k}^{t_{k+1}} g_j
+        de forma vectorizada (shape (n-1, J)).
+        """
+        if self._G is not None:
+            return self._G
+        g_mat = np.zeros((self.n-1, self.J))
+        for k in range(self.n - 1):
+            g_mat[k] = [int_g(self.T, j, self.t[k], self.t[k+1]) 
+                        for j in range(self.J)]
+        self._G = g_mat
+        return self._G
+    
+
+    def add_normals(self, normals_batch):
+        """
+        Añade un iterable/array de normales shape (batch, I, J) y
+        actualiza normals, wick_values, brownian_increments, brownian_paths.
+        Usa cache de Hermite y G.
+        """
+        G = self._build_G()                   # (n-1, J)
+        J = self.J
+        rng_idx = np.arange(J)
+
+        for normal in normals_batch:          # normal.shape = (I,J)
+            self.normals.append(normal)
+
+            # 1) ---- Wick values ------------
+            # cache de Hermite para cada dimensión i
+            # (si I>1 necesitarías bucle en i; para I=1 basta la primera fila)
+            H = hermite_probabilistic(normal[0], self.K)   # shape (K+1,J)
+
+            wick_dict = {}
+            for k in range(self.K + 1):
+                # α de grado k
+                wick_dict[k] = []
+                for alpha in self.alphas[k]:
+                    orders = alpha.values[0]          # (J,)
+                    hermite_factors = H[orders, rng_idx]
+                    xi_alpha = alpha.wick_constant * hermite_factors.prod(
+                        dtype=np.float32
+                    )
+                    wick_dict[k].append(xi_alpha)
+            self.wick_values.append(wick_dict)
+
+            # 2) ---- increments -------------
+            inc = np.dot(normal, G.T)                # (I,J)·(J,n-1) = (I,n-1)
+            self.brownian_increments.append(inc)
+
+            # 3) ---- paths -------------------
+            path = np.hstack(
+                [np.zeros((self.I, 1), dtype=np.float32),
+                 np.cumsum(inc, axis=1)]
+            )
+            self.brownian_paths.append(path)
+
+
+def hermite_probabilistic(x, K):
+    """
+    Devuelve un array H[k, j] = h_k(x_j) para k = 0..K
+    h_0=1 ; h_1=x ; h_{k}=x*h_{k-1}-(k-1)*h_{k-2}
+    """
+    J = x.shape[-1]
+    H = np.empty((K+1, J), dtype=x.dtype)
+    H[0] = 1.0
+    if K >= 1:
+        H[1] = x.copy()
+    for k in range(2, K+1):
+        H[k] = x*H[k-1] - (k-1)*H[k-2]
+    return H
