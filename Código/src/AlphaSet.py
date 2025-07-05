@@ -124,7 +124,7 @@ class AlphaSet:
             self.alphas[k].sort(key=lambda a: tuple(a.values.flatten()))
 
     def calculate_wick_values(self):
-        """
+        """kkk
         Calcula los valores de los polinomios de Wick para las realizaciones de las normales estándar y cada alpha.
 
         Este método recorre todas las matrices de normales y para cada matriz calcula los valores de los polinomios de Wick
