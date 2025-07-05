@@ -192,7 +192,7 @@ class NeuralNetwork(nn.Module):
             total_loss.backward()  # Calcula el gradiente de la pérdida total
             opt.step()  # Actualiza los parámetros del modelo después de acumular el gradiente
             loss_list.append(
-                total_loss
+                total_loss.item()
             )  # Almacena el valor total de la pérdida del batch
 
             # Si se mejora la pérdida, guardamos los pesos del modelo
