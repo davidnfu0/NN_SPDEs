@@ -179,6 +179,7 @@ class AlphaSet:
 
 
 
+
     # Métodos más eficientes
 
     def calculate_alphas_fast(self):
