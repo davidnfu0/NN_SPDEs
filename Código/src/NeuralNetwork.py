@@ -176,17 +176,20 @@ class NeuralNetwork(nn.Module):
 
         # Entrenamos durante el número de épocas especificado
         for epoch in range(epochs):
-            total_loss = 0.0
             # Selecciona aleatoriamente n_normals_batch_size índices únicos de las normales disponibles
             indices = torch.randperm(n_normals_to_train)[:n_normals_batch_size].tolist()
+            total_loss = []
             for bpath_n in indices:
                 self.omega = bpath_n  # Actualiza la normal que se está utilizando
                 opt.zero_grad()  # Resetea los gradientes de los parámetros
                 loss = loss_function(
                     self, space_domain, initial_condition
-                )  # Calcula la pérdida
-                loss.backward()  # Calcula los gradientes
-                total_loss += loss.item()  # Suma el error de cada normal
+                )  # Calcula la Pérdida
+                total_loss.append(loss)  # Suma el error de cada normal
+            total_loss = torch.stack(
+                total_loss
+            ).mean()  # Promedia las pérdidas de las normales
+            total_loss.backward()  # Calcula el gradiente de la pérdida total
             opt.step()  # Actualiza los parámetros del modelo después de acumular el gradiente
             loss_list.append(
                 total_loss
