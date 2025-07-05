@@ -101,3 +101,8 @@ Referencias/
 *.out
 *.synctex.gz
 *.toc
+
+# Ignorar archivos PDF y GIF en la carpeta files
+Código/files/*.pdf
+Código/files/*.gif
+Código/files/*/

@@ -1,4 +1,5 @@
 import torch
+from tqdm import tqdm
 import torch.nn as nn
 import torch.optim as optim
 
@@ -137,6 +138,8 @@ class NeuralNetwork(nn.Module):
         optimizer=optim.Adam,
         lr=0.001,
         model_name="best_model",
+        n_normals_to_train=1,
+        n_normals_batch_size=1,
     ):
         """
         Entrena el modelo utilizando el dominio del espacio, la función de pérdida y la condición inicial.
@@ -148,10 +151,14 @@ class NeuralNetwork(nn.Module):
         epochs (int): El número de épocas para entrenar el modelo.
         optimizer (torch.optim.Optimizer): El optimizador utilizado para actualizar los pesos (por defecto es SGD).
         lr (float): La tasa de aprendizaje para el optimizador.
+        model_name (str): Nombre del modelo para guardar los pesos del mejor modelo encontrado durante el entrenamiento.
+        n_normals_to_train (int): Número de normales a entrenar en cada época (por defecto es 1).
+        n_normals_batch_size (int): Tamaño del batch de normales a entrenar en cada época (por defecto es 1).
 
         Returns:
         loss_list (list): Lista con el valor de la pérdida en cada época.
         """
+        pbar = tqdm(total=epochs)
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.to(device)
         # Asegura que space_domain sea un tensor, y muévelo al device
@@ -169,30 +176,34 @@ class NeuralNetwork(nn.Module):
 
         # Entrenamos durante el número de épocas especificado
         for epoch in range(epochs):
-            omega_loss = []
-            for bpath_n in range(self.n_bpaths):
+            total_loss = 0.0
+            # Selecciona aleatoriamente n_normals_batch_size índices únicos de las normales disponibles
+            indices = torch.randperm(n_normals_to_train)[:n_normals_batch_size].tolist()
+            for bpath_n in indices:
                 self.omega = bpath_n  # Actualiza la normal que se está utilizando
                 opt.zero_grad()  # Resetea los gradientes de los parámetros
                 loss = loss_function(
                     self, space_domain, initial_condition
                 )  # Calcula la pérdida
                 loss.backward()  # Calcula los gradientes
-                opt.step()  # Actualiza los parámetros del modelo
-                omega_loss.append(loss.item())
+                total_loss += loss.item()  # Suma el error de cada normal
+            opt.step()  # Actualiza los parámetros del modelo después de acumular el gradiente
             loss_list.append(
-                sum(omega_loss) / len(omega_loss)
-            )  # Almacena el valor de la pérdida
+                total_loss
+            )  # Almacena el valor total de la pérdida del batch
 
             # Si se mejora la pérdida, guardamos los pesos del modelo
             if loss_list[-1] < best_loss:
                 best_loss = loss_list[-1]
                 self.save_weights(model_name)
 
-            # Imprime el progreso cada 10 épocas
-            if epoch % 10 == 0:
-                print(
-                    f"Epoch {epoch}, Loss: {loss_list[-1]:.4f}, Best Loss: {best_loss:.4f}"
+            # Actualiza la barra de progreso
+            if epoch % max(1, (epochs // 100)) == 0 or epoch == epochs - 1:
+                pbar.set_description(
+                    f"Epoch [{epoch + 1}/{epochs}] | Loss: {loss_list[-1]:.4f} | Best Loss: {best_loss:.4f}"
                 )
+            if epoch == epochs - 1:
+                pbar.close()
 
         # Carga el mejor modelo guardado
         self.load_weights(model_name)
